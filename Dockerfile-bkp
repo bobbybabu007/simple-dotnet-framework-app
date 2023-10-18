@@ -1,0 +1,37 @@
+#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
+#For more information, please see https://aka.ms/containercompat
+
+# Use the official ASP.NET runtime image as the base image
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8.1 AS base
+RUN mkdir app
+RUN cmd /S /C "icacls C:\app /grant Everyone:(OI)(CI)F"
+#WORKDIR app
+#EXPOSE 80
+
+# Use the official ASP.NET SDK image for building
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8.1 AS build
+WORKDIR /src
+COPY . .
+#RUN "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\VsDevCmd.bat"
+RUN nuget restore WebApp2.sln
+RUN msbuild WebApp2.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutputPath=/app
+
+# For dotnet-core
+#RUN dotnet restore "./WebApp2/WebApp2.csproj"
+#RUN dotnet build "./WebApp2/WebApp2.csproj" -c Release -o /app/build
+
+# FROM build AS publish
+# RUN dotnet publish "WebApp2.csproj" -c Release -o /app/publish
+
+# Create a final image with only the runtime environment and published application
+FROM base AS runtime
+WORKDIR /inetpub/wwwroot
+COPY --from=build  /src/. .
+#ENTRYPOINT ["sleep" "200"]
+#"dotnet", "WebApp2.dll"
+
+
+#FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019
+#ARG source
+#WORKDIR /inetpub/wwwroot
+#COPY ${source:-obj/Docker/publish} .
