@@ -1,0 +1,29 @@
+﻿@model WebAppl5.QueryModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Execute SQL Query</title>
+    <link rel="stylesheet" href="~/Content/site.css" />
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("ExecuteQuery", "Query", FormMethod.Post, new { id = "SqlQueryForm" }))
+        {
+            <div>
+                <label for="SqlQuery">Enter SQL Query:</label>
+                @Html.TextAreaFor(model => model.SqlQuery, new { @class = "form-control", rows = 5, id = "SqlQuery" })
+            </div>
+            <br />
+            <input type="submit" value="Run Query" class="btn btn-primary" />
+        }
+    </div>
+    <script src="~/Scripts/custom.js"></script>
+</body>
+</html>

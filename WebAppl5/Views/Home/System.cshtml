@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "System";
+}
+
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title.</h2>
+    <h3>@ViewBag.Message</h3>
+    <div align="center">
+        <table class="table table-striped table-hover">
+            <tr>
+                <td>.NET version</td>
+                <td>@ViewBag.FrameworkDescription</td>
+            </tr>
+            <tr>
+                <td>Operating system</td>
+                <td>@ViewBag.OSDescription</td>
+            </tr>
+            <tr>
+                <td>Processor architecture</td>
+                <td>@ViewBag.OSArchitecture</td>
+            </tr>
+            <tr>
+                <td>CPU cores</td>
+                <td>@ViewBag.ProcessorCount</td>
+            </tr>
+            <tr>
+                <td>DOTNET_RUNNING_IN_CONTAINER</td>
+                <td>@ViewBag.DotnetRunningInContainer</td>
+            </tr>
+        </table>
+    </div>
+    <p>Inspect the container for additional information.</p>
+</main>

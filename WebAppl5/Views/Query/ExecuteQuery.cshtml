@@ -1,0 +1,52 @@
+﻿@model WebAppl5.QueryModel
+@using System.Data
+@using System.Data.SqlClient
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SQL Query Result</title>
+    <link rel="stylesheet" href="~/Content/site.css" />
+</head>
+<body>
+    <div>
+        @if (Model.Result != null && Model.Result.Rows.Count > 0)
+        {
+            <p>Number of Rows: @Model.Result.Rows.Count</p>
+            <p>Number of Columns: @Model.Result.Columns.Count</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        @foreach (DataColumn col in Model.Result.Columns)
+                        {
+                            <th>@col.ColumnName</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow row in Model.Result.Rows)
+                    {
+                        <tr>
+                            @foreach (DataColumn col in Model.Result.Columns)
+                            {
+                                <td>@row[col.ColumnName]</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No data found.</p>
+        }
+    </div>
+    <script src="~/Scripts/custom.js"></script>
+</body>
+</html>

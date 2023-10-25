@@ -1,0 +1,22 @@
+
+# Use the official ASP.NET SDK image for building
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8.1 AS build
+RUN mkdir app
+RUN cmd /S /C "icacls C:\app /grant Everyone:(OI)(CI)F"
+WORKDIR /app
+
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY WebAppl5/*.csproj ./WebAppl5/
+COPY WebAppl5/*.config ./WebAppl5/
+RUN nuget restore WebAppl5.sln
+
+# copy SourceCode and build app
+COPY WebAppl5/. ./WebAppl5/
+WORKDIR /app/WebAppl5
+RUN msbuild /p:Configuration=Release -r:False
+
+# Create application image on official ASP.NET runtime image
+FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8.1 AS runtime
+WORKDIR /inetpub/wwwroot
+COPY --from=build /app/WebAppl5/. ./
