@@ -25,8 +25,19 @@ RUN powershell -NoProfile -ExecutionPolicy Bypass -Command ` \
   iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 #Install git bash and sqlcmd
-RUN choco install -y git sqlcmd
+RUN choco install -y sqlcmd dotnet-7.0-sdk
+
+# Install Git and its BASH terminal for UNIX extras
+RUN choco install -y git
 RUN setx path "C:\\Program Files\\Git\\bin;%path%"
+
+# Install troubleshooting tools using chocolatey
+RUN choco install -y procmon dbgview tcping
+
+# Additional network troubleshooting tools
+RUN powershell -NoProfile -ExecutionPolicy Bypass -Command Install-WindowsFeature -Name Telnet-Client
+RUN powershell -NoProfile -ExecutionPolicy Bypass -Command Install-WindowsFeature RSAT-DNS-Server
+# RUN powershell -NoProfile -ExecutionPolicy Bypass -Command Install-WindowsFeature -Name RSAT-Net Cmdlets
 
 # Trials
 # # Install SQL Server command-line utilities
@@ -47,3 +58,9 @@ RUN setx path "C:\\Program Files\\Git\\bin;%path%"
 
 WORKDIR /inetpub/wwwroot
 COPY --from=build /app/WebAppl5/. ./
+
+#Use below lines for bash terminal on container
+# SHELL ["bash.exe", "-c"]
+# RUN "ls -la"
+# ENTRYPOINT ["bash.exe"]
+
